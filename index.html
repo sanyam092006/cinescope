@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>CineScope</title>
+    <script>
+        // Fallback demo key
+        const FALLBACK_API_KEY = 'demo-key-here';
+
+        // Function to load the config.js file
+        function loadConfig() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'config.js';
+                script.onload = () => resolve(window.CONFIG);
+                script.onerror = () => resolve({ apiKey: FALLBACK_API_KEY }); // Use fallback on error
+                document.head.appendChild(script);
+            });
+        }
+
+        // Initialize application
+        loadConfig().then(config => {
+            console.log('API Key:', config.apiKey);
+            // Initialize application logic with the API key
+            initApplication(config.apiKey);
+        });
+
+        function initApplication(apiKey) {
+            // Your application logic here
+            console.log('Application initialized with API Key:', apiKey);
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to CineScope</h1>
+    <p>Your movie search application.</p>
+    <script src="app.js"></script>
+</body>
+</html>
