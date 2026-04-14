@@ -578,6 +578,7 @@ async function showDetail(id){
         }).then(r=>r.ok?r.json():[]).then(results=>{
           const sec=document.getElementById('streamingSection');
           if(!sec)return;
+          sec.style.display='block';
           const shows=Array.isArray(results)?results:(results.shows||[]);
           const match=shows[0];
           const opts=match?.streamingOptions?.['in']||[];
@@ -590,21 +591,24 @@ async function showDetail(id){
           }
         }).catch(()=>{
           const sec=document.getElementById('streamingSection');
-          if(sec)sec.innerHTML=`<div class="section-label">Where to Watch</div><div class="stream-none">Could not load streaming info.</div>`;
+          if(sec){sec.style.display='block';sec.innerHTML=`<div class="section-label">Where to Watch</div><div class="stream-none">Could not load streaming info.</div>`;}
         });
       }
     }else{
       const d=await fetchMovieDetail(id);
       const genres=(d.Genre||'').split(', ').filter(Boolean).map(g=>`<span class="badge badge-genre">${esc(g)}</span>`).join('');
       const wl=inWL(id);
-      document.getElementById('modalContent').innerHTML=`<div class="modal-hero">${d.Poster&&d.Poster!=='N/A'?`<img class="modal-backdrop" src="${esc(d.Poster)}" alt="">`:''}<div class="modal-poster-wrap">${d.Poster&&d.Poster!=='N/A'?`<img src="${esc(d.Poster)}" alt="">`:''}</div><div class="modal-hero-info"><div class="modal-htitle">${esc(d.Title)}</div><div class="modal-badges"><span class="badge badge-year">${esc(d.Year)}</span>${d.imdbRating&&d.imdbRating!=='N/A'?`<span class="badge badge-rating">★ ${esc(d.imdbRating)}</span>':''}<span class="badge badge-type">${esc(d.Type)}</span>${genres}</div></div></div><div class="modal-body"><div class="section-label">Plot</div><div class="modal-plot">${esc(d.Plot||'No description available.')}</div><div class="section-label">Details</div><div class="modal-stats"><div class="modal-stat"><div class="stat-label">Director</div><div class="stat-val">${esc(d.Director||'—')}</div></div><div class="modal-stat"><div class="stat-label">Runtime</div><div class="stat-val">${esc(d.Runtime||'—')}</div></div><div class="modal-stat"><div class="stat-label">Rated</div><div class="stat-val">${esc(d.Rated||'—')}</div></div><div class="modal-stat"><div class="stat-label">Language</div><div class="stat-val">${esc(d.Language||'—')}</div></div><div class="modal-stat"><div class="stat-label">Box Office</div><div class="stat-val">${esc(d.BoxOffice||'—')}</div></div><div class="modal-stat"><div class="stat-label">Awards</div><div class="stat-val" style="font-size:12px">${esc(d.Awards||'—')}</div></div></div><div class="streaming-section" id="streamingSection" style="display:none"><div class="section-label">Where to Watch</div><div class="stream-loading"><div class="stream-spinner"></div><span>Finding streaming platforms…</span></div></div><div class="modal-actions"><button class="btn-primary" id="mWLBtn" data-id="${esc(id)}">${wl?'✓ In Watchlist':'+ Add to Watchlist'}</button>${d.imdbID?`<a href="https://www.imdb.com/title/${esc(d.imdbID)}/" target="_blank" rel="noopener"><button class="btn-ghost">View on IMDb ↗</button></a>`:''}</div></div>`;
+      document.getElementById('modalContent').innerHTML=`<div class="modal-hero">${d.Poster&&d.Poster!=='N/A'?`<img class="modal-backdrop" src="${esc(d.Poster)}" alt="">`:''}<div class="modal-poster-wrap">${d.Poster&&d.Poster!=='N/A'?`<img src="${esc(d.Poster)}" alt="">`:''}</div><div class="modal-hero-info"><div class="modal-htitle">${esc(d.Title)}</div><div class="modal-badges"><span class="badge badge-year">${esc(d.Year)}</span>${d.imdbRating&&d.imdbRating!=='N/A'?`<span class="badge badge-rating">★ ${esc(d.imdbRating)}</span>`:''}<span class="badge badge-type">${esc(d.Type)}</span>${genres}</div></div></div><div class="modal-body"><div class="section-label">Plot</div><div class="modal-plot">${esc(d.Plot||'No description available.')}</div><div class="section-label">Details</div><div class="modal-stats"><div class="modal-stat"><div class="stat-label">Director</div><div class="stat-val">${esc(d.Director||'—')}</div></div><div class="modal-stat"><div class="stat-label">Runtime</div><div class="stat-val">${esc(d.Runtime||'—')}</div></div><div class="modal-stat"><div class="stat-label">Rated</div><div class="stat-val">${esc(d.Rated||'—')}</div></div><div class="modal-stat"><div class="stat-label">Language</div><div class="stat-val">${esc(d.Language||'—')}</div></div><div class="modal-stat"><div class="stat-label">Box Office</div><div class="stat-val">${esc(d.BoxOffice||'—')}</div></div><div class="modal-stat"><div class="stat-label">Awards</div><div class="stat-val" style="font-size:12px">${esc(d.Awards||'—')}</div></div></div><div class="streaming-section" id="streamingSection" style="display:none"><div class="section-label">Where to Watch</div><div class="stream-loading"><div class="stream-spinner"></div><span>Finding streaming platforms…</span></div></div><div class="modal-actions"><button class="btn-primary" id="mWLBtn" data-id="${esc(id)}">${wl?'✓ In Watchlist':'+ Add to Watchlist'}</button>${d.imdbID?`<a href="https://www.imdb.com/title/${esc(d.imdbID)}/" target="_blank" rel="noopener"><button class="btn-ghost">View on IMDb ↗</button></a>`:''}</div></div>`;
       
       if(!RAPID_KEY){
-        document.getElementById('streamingSection').innerHTML=`<div class="section-label">Where to Watch</div><div class="stream-none" style="background:rgba(244,162,97,.06);border:1px solid rgba(244,162,97,.2);color:var(--gold)">Add your free <a href="https://rapidapi.com/movie-of-the-night-movie-of-the-night-default/api/streaming-availability" target="_blank" style="color:var(--gold);text-decoration:underline">RapidAPI key</a> to see streaming links.</div>`;
+        const sec=document.getElementById('streamingSection');
+        sec.style.display='block';
+        sec.innerHTML=`<div class="section-label">Where to Watch</div><div class="stream-none" style="background:rgba(244,162,97,.06);border:1px solid rgba(244,162,97,.2);color:var(--gold)">Add your free <a href="https://rapidapi.com/movie-of-the-night-movie-of-the-night-default/api/streaming-availability" target="_blank" style="color:var(--gold);text-decoration:underline">RapidAPI key</a> to see streaming links.</div>`;
       }else{
         fetchStreamingLinks(id).then(opts=>{
           const sec=document.getElementById('streamingSection');
           if(!sec)return;
+          sec.style.display='block';
           if(!opts||opts.length===0){
             sec.innerHTML=`<div class="section-label">Where to Watch</div><div class="stream-none">Not available on any tracked streaming service right now.</div>`;
           }else{
